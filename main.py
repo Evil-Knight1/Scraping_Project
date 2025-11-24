@@ -69,11 +69,7 @@ def extract_endpoint(
     """
     try:
         result = service.extract(
-            url=request.url,
-            prompt=request.prompt,
-            schema=request.schema,
-            enable_web_search=request.enable_web_search,
-            show_sources=request.show_sources,
+            urls=request.urls,
         )
         return result
     except Exception as e:

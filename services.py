@@ -2,7 +2,7 @@ import os
 import json
 from dotenv import load_dotenv
 from typing import Dict, Any, Optional
-from firecrawl import FirecrawlApp
+from firecrawl import Firecrawl
 from database import (
     get_cached_crawl,
     save_crawl_result,
@@ -19,7 +19,7 @@ class FirecrawlService:
         if not api_key:
             # We'll allow it to be None for testing/mocking, but warn
             print("Warning: FIRECRAWL_API_KEY not found in environment variables.")
-        self.app: FirecrawlApp = FirecrawlApp(api_key=api_key)
+        self.app: Firecrawl = Firecrawl(api_key=api_key)
 
     def search(
         self,
@@ -32,7 +32,11 @@ class FirecrawlService:
         )
         return results
 
-    def extract(self, url: str) -> Dict[str, Any]:
+    def extract(self, urls: list[str]) -> Dict[str, Any]:
+        """Link for docs:
+        https://docs.firecrawl.dev/api-reference/endpoint/extract
+        """
+
         schema = {
             "type": "object",
             "properties": {"description": {"type": "string"}},
@@ -40,7 +44,7 @@ class FirecrawlService:
         }
 
         res = self.app.extract(
-            urls=[url],
+            urls=urls,
             prompt="Extract relevant legal information from these pages: laws, regulations, article numbers, effective dates, penalties, definitions, and any PDF-linked legal documents. Also, if there are downloadable PDF files, extract their text content.",
             schema=schema,
         )

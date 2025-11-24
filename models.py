@@ -15,10 +15,6 @@ class ExtractRequest(BaseModel):
     """
 
     urls: List[str]
-    prompt: str = (
-        "Extract relevant legal information from these pages: laws, regulations, article numbers, effective dates, penalties, definitions, and any PDF-linked legal documents. Also, if there are downloadable PDF files, extract their text content."
-    )
-    schema: Dict[str, Any]
     enable_web_search: bool = (
         False  # When true, the extraction will use web search to find additional data
     )
