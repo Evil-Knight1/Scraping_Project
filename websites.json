@@ -5,7 +5,7 @@
     "name": "صحيفة أم القرى",
     "authority": "وزارة الإعلام",
     "description": "الجريدة الرسمية للمملكة العربية السعودية، تنشر الأنظمة والمراسيم الملكية واللوائح التنفيذية فور اعتمادها.",
-    "baseUrl": "https://uqn.gov.sa"
+    "url": "https://uqn.gov.sa"
   },
   {
     "id": "R2",
@@ -13,7 +13,7 @@
     "name": "هيئة الخبراء بمجلس الوزراء",
     "authority": "مجلس الوزراء",
     "description": "المرجع التشريعي الرسمي الذي يحفظ الأنظمة واللوائح بعد نشرها في أم القرى.",
-    "baseUrl": "https://laws.boe.gov.sa"
+    "url": "https://laws.boe.gov.sa"
   },
   {
     "id": "R3",
@@ -21,7 +21,7 @@
     "name": "الوزارات القطاعية (العدل، الموارد البشرية، التجارة)",
     "authority": "الجهات التنفيذية",
     "description": "تصدر اللوائح التنفيذية التفصيلية لتطبيق الأنظمة حسب اختصاصها القضائي والعمالي والتجاري.",
-    "baseUrl": "https://www.moj.gov.sa"
+    "url": "https://www.moj.gov.sa"
   },
   {
     "id": "R4",
@@ -29,7 +29,7 @@
     "name": "البنك المركزي السعودي (SAMA)",
     "authority": "SAMA",
     "description": "يصدر التعاميم والتعليمات للقطاع المالي، التأميني، وشركات التمويل لضمان الامتثال والإشراف المالي.",
-    "baseUrl": "https://www.sama.gov.sa"
+    "url": "https://www.sama.gov.sa"
   },
   {
     "id": "R5",
@@ -37,7 +37,7 @@
     "name": "هيئة السوق المالية (CMA)",
     "authority": "CMA",
     "description": "تنشر التعاميم والتعليمات الخاصة بالشركات المساهمة والوسطاء والمستشارين الماليين.",
-    "baseUrl": "https://cma.org.sa"
+    "url": "https://cma.org.sa"
   },
   {
     "id": "R6",
@@ -45,7 +45,7 @@
     "name": "هيئة الزكاة والضريبة والجمارك (ZATCA)",
     "authority": "ZATCA",
     "description": "تصدر التعاميم الخاصة بالزكاة، الضرائب، الجمارك، والفوترة الإلكترونية.",
-    "baseUrl": "https://zatca.gov.sa"
+    "url": "https://zatca.gov.sa"
   },
   {
     "id": "R7",
@@ -53,7 +53,7 @@
     "name": "وزارة العدل",
     "authority": "MOJ",
     "description": "تنشر السوابق القضائية في القضاء العام والتجاري والعمالي عبر بوابة الأحكام القضائية.",
-    "baseUrl": "https://judgments.moj.gov.sa"
+    "url": "https://judgments.moj.gov.sa"
   },
   {
     "id": "R8",
@@ -61,7 +61,7 @@
     "name": "ديوان المظالم",
     "authority": "ديوان المظالم",
     "description": "ينشر السوابق القضائية في القضاء الإداري والطعون على القرارات الحكومية والعقود الإدارية.",
-    "baseUrl": "https://www.bog.gov.sa"
+    "url": "https://www.bog.gov.sa"
   },
   {
     "id": "R9",
@@ -69,7 +69,7 @@
     "name": "لجان المنازعات المصرفية والتمويلية (SAMA)",
     "authority": "SAMA",
     "description": "تصدر أحكامًا شبه قضائية تخص نزاعات البنوك وشركات التمويل وشركات التأمين الخاضعة لإشراف البنك المركزي.",
-    "baseUrl": "https://www.sama.gov.sa"
+    "url": "https://www.sama.gov.sa"
   },
   {
     "id": "R10",
@@ -77,7 +77,7 @@
     "name": "لجان الفصل في منازعات الأوراق المالية (CMA)",
     "authority": "CMA",
     "description": "تنشر السوابق القضائية الخاصة بالمخالفات المالية وحوكمة الشركات والإفصاح.",
-    "baseUrl": "https://cma.org.sa"
+    "url": "https://cma.org.sa"
   },
   {
     "id": "R11",
@@ -85,7 +85,7 @@
     "name": "اللجان الضريبية والجمركية (ZATCA)",
     "authority": "ZATCA",
     "description": "تصدر أحكامًا في المنازعات الضريبية والجمركية وتشكل مرجعًا لاجتهادات الضرائب والجمارك.",
-    "baseUrl": "https://zatca.gov.sa"
+    "url": "https://zatca.gov.sa"
   },
   {
     "id": "R12",
@@ -93,7 +93,7 @@
     "name": "اللجان التأمينية (CHI)",
     "authority": "CHI",
     "description": "تنشر الأحكام الصادرة في منازعات التأمين الصحي بين الشركات والمستفيدين ومقدمي الخدمات الطبية.",
-    "baseUrl": "https://chi.gov.sa"
+    "url": "https://chi.gov.sa"
   },
   {
     "id": "R13",
@@ -101,7 +101,7 @@
     "name": "هيئة السوق المالية (CMA)",
     "authority": "CMA",
     "description": "تنظم حوكمة الشركات والإفصاح والالتزام المؤسسي في السوق المالية السعودية.",
-    "baseUrl": "https://cma.org.sa"
+    "url": "https://cma.org.sa"
   },
   {
     "id": "R14",
@@ -109,7 +109,7 @@
     "name": "البنك المركزي السعودي (SAMA)",
     "authority": "SAMA",
     "description": "يصدر اللوائح الخاصة بالحوكمة المصرفية ومكافحة غسل الأموال وإدارة المخاطر المالية.",
-    "baseUrl": "https://www.sama.gov.sa"
+    "url": "https://www.sama.gov.sa"
   },
   {
     "id": "R15",
@@ -117,7 +117,7 @@
     "name": "وزارة التجارة (MC)",
     "authority": "MC",
     "description": "تنظم امتثال الشركات التجارية ولوائح الحوكمة الداخلية والتقارير النظامية.",
-    "baseUrl": "https://mci.gov.sa"
+    "url": "https://mci.gov.sa"
   },
   {
     "id": "R16",
@@ -125,7 +125,7 @@
     "name": "الهيئة السعودية للبيانات والذكاء الاصطناعي (SDAIA) + الهيئة الوطنية للأمن السيبراني (NCA)",
     "authority": "SDAIA / NCA",
     "description": "تصدر لوائح حوكمة البيانات، الذكاء الاصطناعي، وضوابط الأمن السيبراني الوطنية.",
-    "baseUrl": "https://sdaia.gov.sa"
+    "url": "https://sdaia.gov.sa"
   },
   {
     "id": "R17",
@@ -133,7 +133,7 @@
     "name": "البنك المركزي السعودي (SAMA)",
     "authority": "SAMA",
     "description": "يضع القواعد التنفيذية والتراخيص للأنشطة المالية والتأمينية والتمويلية، وينظم الإشراف والرقابة.",
-    "baseUrl": "https://www.sama.gov.sa"
+    "url": "https://www.sama.gov.sa"
   },
   {
     "id": "R18",
@@ -141,7 +141,7 @@
     "name": "هيئة السوق المالية (CMA)",
     "authority": "CMA",
     "description": "تنشر القواعد الإجرائية لتسجيل الشركات، الإفصاح، التداول، والإجراءات التأديبية.",
-    "baseUrl": "https://cma.org.sa"
+    "url": "https://cma.org.sa"
   },
   {
     "id": "R19",
@@ -149,7 +149,7 @@
     "name": "هيئة الزكاة والضريبة والجمارك (ZATCA)",
     "authority": "ZATCA",
     "description": "تنشر القواعد الإجرائية المتعلقة بالضرائب والجمارك والفوترة الإلكترونية.",
-    "baseUrl": "https://zatca.gov.sa"
+    "url": "https://zatca.gov.sa"
   },
   {
     "id": "R20",
@@ -157,7 +157,7 @@
     "name": "مجلس الضمان الصحي (CHI)",
     "authority": "CHI",
     "description": "يصدر ضوابط التأمين الصحي الإلزامي ولوائح مقدمي الخدمات الطبية.",
-    "baseUrl": "https://chi.gov.sa"
+    "url": "https://chi.gov.sa"
   },
   {
     "id": "R21",
@@ -165,6 +165,6 @@
     "name": "الهيئة الوطنية للأمن السيبراني (NCA)",
     "authority": "NCA",
     "description": "تصدر ضوابط الأمن السيبراني القطاعية (CSF، ECC، CCC) التي تنظم الامتثال السيبراني في الجهات الحكومية والخاصة.",
-    "baseUrl": "https://nca.gov.sa"
+    "url": "https://nca.gov.sa"
   }
 ]

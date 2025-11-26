@@ -1,5 +1,4 @@
-fastapi
+google-genai
 uvicorn
-firecrawl-py>=4.8.0
 pydantic
 python-dotenv
