@@ -6,6 +6,7 @@ import os
 from models import (
     SearchRequest,
     Website,
+    LawUpdateRequest
 )
 from services import GoogleGeminiService
 from database import init_db
