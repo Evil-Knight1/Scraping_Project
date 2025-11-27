@@ -13,11 +13,6 @@ from database import init_db
 app = FastAPI(title="Saudi Legal Scraper API")
 
 
-# Initialize DB on startup
-@app.on_event("startup")
-def on_startup():
-    init_db()
-
 
 # Dependency for service
 def get_google_gemini_service():
