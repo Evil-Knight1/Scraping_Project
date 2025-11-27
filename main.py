@@ -41,11 +41,6 @@ def list_websites(request: List[Website]):
     return get_websites()
 
 
-# @app.get("/law_updates"):
-#     def get_law_updates():
-#         return get_websites()
-
-
 @app.post("/search")
 def search_endpoint(
     request: SearchRequest,
@@ -108,9 +103,13 @@ def get_law_updates(
     try:
         # If domains are not provided in request, load default list from JSON
         target_domains = request.domains
+
         if not target_domains:
             all_sites = get_websites()
             target_domains = [site.url for site in all_sites]
+        # elif len(target_domains) > 20:
+        #     partial_sites = target_domains[:19]
+        #     target_domains = partial_sites
 
         law_updates_prompt = service.get_updated_laws(
             date=request.date,

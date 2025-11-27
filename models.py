@@ -5,6 +5,7 @@ from typing import Optional, List, Dict, Any
 class SearchRequest(BaseModel):
     query: str
     domains: Optional[List[str]] = None
+    mode: Optional[bool] = False
 
 
 class LawUpdateRequest(BaseModel):

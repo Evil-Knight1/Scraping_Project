@@ -33,7 +33,7 @@ class GoogleGeminiService:
         print(f"final searched query: {query}")
         generate_content_config = types.GenerateContentConfig(
             tools=self.tools,
-            temperature=0.2,  # Lower temperature for more factual legal responses
+            temperature=0.3,  # Lower temperature for more factual legal responses
             response_modalities=["TEXT"],
         )
         try:
@@ -58,19 +58,19 @@ class GoogleGeminiService:
             print(f"Error generating content: {e}")
             return f"Error: {str(e)}"
 
-    def search(self, query: str, domains: List[str]):
+    def search(self, query: str, domains: List[str], mode: Optional[bool] = False):
         domain_context = self.domain_context(domains)
         prompt_text = f"""
 You are a specialized Legal Searching Agent for Saudi Arabia.
 
-Your ONLY source of truth is the content retrieved from the domains listed below.
+Your first source of truth is the content retrieved from all domains listed below.
 You MUST operate with STRICT legal accuracy and return results ONLY in the required schema.
 
 ==========================
 ### MANDATORY RULES
 ==========================
 
-1. Search ONLY within the domains listed in the "Target Domains" section.
+1. {"Prioritize" if mode else "Only"} searching within the domains listed in the "Target Domains" section.
 2. You MUST use url_context to fetch and read actual content from these domains.
 3. You MUST return ALL answers in the following JSON schema ONLY:
 
@@ -84,15 +84,6 @@ You MUST operate with STRICT legal accuracy and return results ONLY in the requi
    - No rephrasing.
    - No interpretation beyond what is textually written.
 
-5. NEVER rely on general knowledge.
-
-6. If the required information does NOT exist in the fetched content:
-   You MUST return EXACTLY:
-
-{{
-  "response": "لا يوجد معلومات متاحة في المصادر المحددة.",
-  "sources": ["list of urls that were checked"]
-}}
 
 ==========================
 ### TASK
@@ -124,9 +115,9 @@ You MUST operate with STRICT legal accuracy and return results ONLY in the requi
 ابحث داخل المواقع الموجودة حصرياً في قائمة "sources" المرفقة لك عبر النظام (Grounding API)، ولا تعتمد على أي معرفة خارج هذه المواقع.
 
 ❗ المطلوب:
-استخرج كل التحديثات القانونية، اللوائح، التشريعات، القرارات، التعميمات، التعديلات الدستورية، والتحديثات القانونية ذات الصلة.
+استخرج كل المتعلقات  القانونية، اللوائح، التشريعات، القرارات، التعميمات، التعديلات الدستورية، والتحديثات القانونية ذات الصلة.
 
-ابدأ البحث من تاريخ: "{date}" 
+ابدأ البحث من تاريخ: "{date}"  الي تاريخ اليوم.
 أو ما يوازي هذا التاريخ بالتقويم الهجري.
 
 ❗ طريقة عرض النتائج:
@@ -134,19 +125,19 @@ You MUST operate with STRICT legal accuracy and return results ONLY in the requi
 
 {{
    "updated_laws": [
-                {{ "title": "string", "source": "string" }}
+                {{ "title": "string", "source": "rediractable url" }}
             ]
 }}
 
-الروابط:
+Target Domains (to search using url_context):
 {domain_context}
 
 ❗ تعليمات مهمة:
-- استخدم فقط الروابط التي تأتي من المصادر المربوطة بالطلب.
-- تجاهل أي روابط غير قانونية أو غير موثوقة.
-- ارجع رابط الصفحة التي تظهر فيها القرار أو الإعلان القانوني.
+-. Only searching within the domains listed in the "Target Domains" section.
+-. You MUST use url_context to fetch and read actual content from these domains.
 - لا تضف نصوصاً إضافية خارج الـ JSON.
 - يجب أن يكون كل عنوان مأخوذ مباشرة من صفحة القرار أو الإعلان القانوني.
+- return the real detected and ready for redirection url (Grounding API).
 - إذا وجدت تحديثات متعددة، أدرجها كلها.
     """
         return prompt_text
