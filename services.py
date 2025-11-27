@@ -33,7 +33,7 @@ class GoogleGeminiService:
         print(f"final searched query: {query}")
         generate_content_config = types.GenerateContentConfig(
             tools=self.tools,
-            temperature=0.3,  # Lower temperature for more factual legal responses
+            temperature=0.2,  # Lower temperature for more factual legal responses
             response_modalities=["TEXT"],
         )
         try:
@@ -132,12 +132,11 @@ You MUST operate with STRICT legal accuracy and return results ONLY in the requi
 ❗ طريقة عرض النتائج:
 أعد النتائج في شكل JSON مطابق تماماً للمخطط التالي:
 
-[
-  {{
-    "title": "...",
-    "url": "..."
-  }}
-]
+{{
+   "updated_laws": [
+                {{ "title": "string", "source": "string" }}
+            ]
+}}
 
 الروابط:
 {domain_context}
@@ -145,6 +144,7 @@ You MUST operate with STRICT legal accuracy and return results ONLY in the requi
 ❗ تعليمات مهمة:
 - استخدم فقط الروابط التي تأتي من المصادر المربوطة بالطلب.
 - تجاهل أي روابط غير قانونية أو غير موثوقة.
+- ارجع رابط الصفحة التي تظهر فيها القرار أو الإعلان القانوني.
 - لا تضف نصوصاً إضافية خارج الـ JSON.
 - يجب أن يكون كل عنوان مأخوذ مباشرة من صفحة القرار أو الإعلان القانوني.
 - إذا وجدت تحديثات متعددة، أدرجها كلها.

@@ -62,19 +62,40 @@ def search_endpoint(
         if not target_domains:
             all_sites = get_websites()
             target_domains = [site.url for site in all_sites]
-        print(target_domains)
-        print(request.query)
+
         search_prompt = service.search(
             query=request.query,
             domains=target_domains,
         )
-        print(f"search_prompt: {search_prompt}")
         search_result = service.generate_content(
             query=search_prompt,
         )
-        splited_results = search_result.split("sources")
-        print(f"ANSWER: {splited_results}")
-        return {"response": splited_results[0], "sources": splited_results[1]}
+        try:
+            start_index = search_result.find("{")
+            end_index = search_result.rfind("}")
+
+            if start_index == -1 or end_index == -1 or start_index > end_index:
+                # If we can't find the start/end of JSON, raise error with the full text
+                raise json.JSONDecodeError(
+                    "JSON start/end markers not found in response.",
+                    search_result,
+                    0,
+                )
+            json_string = search_result[start_index : end_index + 1]
+
+            # The prompt instructs the model to return a specific JSON object
+            search_json = json.loads(json_string)
+
+            # Ensure the required keys exist before returning
+            return search_json
+
+        except json.JSONDecodeError as json_e:
+            # Handle cases where the model returns non-JSON or malformed JSON
+            print(f"JSON Decode Error in /search: {json_e}. Raw text: {search_result}")
+            raise HTTPException(
+                status_code=500,
+                detail=f"Failed to parse model search result as JSON. Raw response: {search_result}",
+            )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -90,17 +111,40 @@ def get_law_updates(
         if not target_domains:
             all_sites = get_websites()
             target_domains = [site.url for site in all_sites]
-        print(target_domains)
-        print(request.date)
+
         law_updates_prompt = service.get_updated_laws(
             date=request.date,
             domains=target_domains,
         )
-        print(f"law_updates_prompt: {law_updates_prompt}")
         law_updates_result = service.generate_content(
             query=law_updates_prompt,
         )
-        return law_updates_result
+        try:
+            start_index = law_updates_result.find("{")
+            end_index = law_updates_result.rfind("}")
+
+            if start_index == -1 or end_index == -1 or start_index > end_index:
+                # If we can't find the start/end of JSON, raise error with the full text
+                raise json.JSONDecodeError(
+                    "JSON start/end markers not found in response.",
+                    law_updates_result,
+                    0,
+                )
+            json_string = law_updates_result[start_index : end_index + 1]
+            # The prompt instructs the model to return a specific JSON object
+            law_updates_json = json.loads(json_string)
+            # Ensure the required keys exist before returning
+            return law_updates_json
+
+        except json.JSONDecodeError as json_e:
+            # Handle cases where the model returns non-JSON or malformed JSON
+            print(
+                f"JSON Decode Error in /law_updates: {json_e}. Raw text: {law_updates_result}"
+            )
+            raise HTTPException(
+                status_code=500,
+                detail=f"Failed to parse model law updates result as JSON. Raw response: {law_updates_result}",
+            )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
