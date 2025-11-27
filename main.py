@@ -1,4 +1,3 @@
-from models import LawUpdateRequest
 from fastapi import FastAPI, HTTPException, Depends
 from typing import List, Optional
 import json
@@ -9,7 +8,6 @@ from models import (
     LawUpdateRequest
 )
 from services import GoogleGeminiService
-from database import init_db
 
 app = FastAPI(title="Saudi Legal Scraper API")
 
