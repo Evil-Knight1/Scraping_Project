@@ -5,15 +5,18 @@
     "name": "صحيفة أم القرى",
     "authority": "وزارة الإعلام",
     "description": "الجريدة الرسمية للمملكة العربية السعودية، تنشر الأنظمة والمراسيم الملكية واللوائح التنفيذية فور اعتمادها.",
-    "url": "https://uqn.gov.sa"
+    "url": "https://uqn.gov.sa",
+    "paths": ["https://uqn.gov.sa/category?cat=11"]
   },
+
   {
     "id": "R2",
     "category": "قوانين",
     "name": "هيئة الخبراء بمجلس الوزراء",
     "authority": "مجلس الوزراء",
     "description": "المرجع التشريعي الرسمي الذي يحفظ الأنظمة واللوائح بعد نشرها في أم القرى.",
-    "url": "https://laws.boe.gov.sa"
+    "url": "https://laws.boe.gov.sa",
+    "paths": ["https://laws.boe.gov.sa/BoeLaws/Laws/LawUpdated"]
   },
   {
     "id": "R3",
@@ -21,7 +24,8 @@
     "name": "الوزارات القطاعية (العدل، الموارد البشرية، التجارة)",
     "authority": "الجهات التنفيذية",
     "description": "تصدر اللوائح التنفيذية التفصيلية لتطبيق الأنظمة حسب اختصاصها القضائي والعمالي والتجاري.",
-    "url": "https://www.moj.gov.sa"
+    "url": "https://www.moj.gov.sa",
+    "paths": ["https://www.moj.gov.sa/TameemPortal/Pages/default.aspx"]
   },
   {
     "id": "R5",
@@ -29,7 +33,11 @@
     "name": "هيئة السوق المالية (CMA)",
     "authority": "CMA",
     "description": "تنشر التعاميم والتعليمات الخاصة بالشركات المساهمة والوسطاء والمستشارين الماليين.",
-    "url": "https://cma.org.sa"
+    "url": "https://cma.org.sa",
+    "paths": [
+      "https://cma.gov.sa/MediaCenter/NEWS/Pages/default.aspx",
+      "https://cma.gov.sa/Market/Prospectuses/Pages/default.aspx"
+    ]
   },
   {
     "id": "R6",
@@ -37,78 +45,9 @@
     "name": "هيئة الزكاة والضريبة والجمارك (ZATCA)",
     "authority": "ZATCA",
     "description": "تصدر التعاميم الخاصة بالزكاة، الضرائب، الجمارك، والفوترة الإلكترونية.",
-    "url": "https://zatca.gov.sa"
-  },
-  {
-    "id": "R7",
-    "category": "سوابق قضائية",
-    "name": "وزارة العدل",
-    "authority": "MOJ",
-    "description": "تنشر السوابق القضائية في القضاء العام والتجاري والعمالي عبر بوابة الأحكام القضائية.",
-    "url": "https://judgments.moj.gov.sa"
-  },
-  {
-    "id": "R8",
-    "category": "سوابق قضائية",
-    "name": "ديوان المظالم",
-    "authority": "ديوان المظالم",
-    "description": "ينشر السوابق القضائية في القضاء الإداري والطعون على القرارات الحكومية والعقود الإدارية.",
-    "url": "https://www.bog.gov.sa"
-  },
-  {
-    "id": "R9",
-    "category": "سوابق قضائية",
-    "name": "لجان المنازعات المصرفية والتمويلية (SAMA)",
-    "authority": "SAMA",
-    "description": "تصدر أحكامًا شبه قضائية تخص نزاعات البنوك وشركات التمويل وشركات التأمين الخاضعة لإشراف البنك المركزي.",
-    "url": "https://www.sama.gov.sa"
-  },
-  {
-    "id": "R10",
-    "category": "سوابق قضائية",
-    "name": "لجان الفصل في منازعات الأوراق المالية (CMA)",
-    "authority": "CMA",
-    "description": "تنشر السوابق القضائية الخاصة بالمخالفات المالية وحوكمة الشركات والإفصاح.",
-    "url": "https://cma.org.sa"
-  },
-  {
-    "id": "R12",
-    "category": "سوابق قضائية",
-    "name": "اللجان التأمينية (CHI)",
-    "authority": "CHI",
-    "description": "تنشر الأحكام الصادرة في منازعات التأمين الصحي بين الشركات والمستفيدين ومقدمي الخدمات الطبية.",
-    "url": "https://chi.gov.sa"
-  },
-  {
-    "id": "R15",
-    "category": "حوكمة والتزام",
-    "name": "وزارة التجارة (MC)",
-    "authority": "MC",
-    "description": "تنظم امتثال الشركات التجارية ولوائح الحوكمة الداخلية والتقارير النظامية.",
-    "url": "https://mci.gov.sa"
-  },
-  {
-    "id": "R16",
-    "category": "حوكمة والتزام",
-    "name": "الهيئة السعودية للبيانات والذكاء الاصطناعي (SDAIA) + الهيئة الوطنية للأمن السيبراني (NCA)",
-    "authority": "SDAIA / NCA",
-    "description": "تصدر لوائح حوكمة البيانات، الذكاء الاصطناعي، وضوابط الأمن السيبراني الوطنية.",
-    "url": "https://sdaia.gov.sa"
-  },
-  {
-    "id": "R17",
-    "category": "قواعد تنظيمية",
-    "name": "البنك المركزي السعودي (SAMA)",
-    "authority": "SAMA",
-    "description": "يضع القواعد التنفيذية والتراخيص للأنشطة المالية والتأمينية والتمويلية، وينظم الإشراف والرقابة.",
-    "url": "https://www.sama.gov.sa"
-  },
-  {
-    "id": "R18",
-    "category": "قواعد تنظيمية",
-    "name": "هيئة السوق المالية (CMA)",
-    "authority": "CMA",
-    "description": "تنشر القواعد الإجرائية لتسجيل الشركات، الإفصاح، التداول، والإجراءات التأديبية.",
-    "url": "https://cma.org.sa"
+    "url": "https://zatca.gov.sa",
+    "paths": [
+      "https://zatca.gov.sa/ar/RulesRegulations/Taxes/Pages/default.aspx"
+    ]
   }
 ]

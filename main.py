@@ -1,24 +1,25 @@
-from fastapi import FastAPI, HTTPException, Depends
-from typing import List, Optional
+from http.client import HTTPException
 import json
+from fastapi import FastAPI, Depends, HTTPException
+import uvicorn
+from pydantic import BaseModel
+from typing import List
 import os
-from models import (
-    SearchRequest,
-    Website,
-    LawUpdateRequest
-)
-from services import GoogleGeminiService
+from firecrawl_service import FireCrawlService
+from google_gemini_service import GoogleGeminiService
+from models import SearchRequest, SearchRequest, Website
 
-app = FastAPI(title="Saudi Legal Scraper API")
+app = FastAPI()
 
 
-
-# Dependency for service
 def get_google_gemini_service():
     return GoogleGeminiService()
 
 
-# Load websites
+def get_fire_crawl_service():
+    return FireCrawlService()
+
+
 def get_websites() -> List[Website]:
     try:
         with open("websites.json", "r", encoding="utf-8") as f:
@@ -33,6 +34,31 @@ def get_websites() -> List[Website]:
 def list_websites(request: List[Website]):
     """List all supported Saudi legal websites."""
     return get_websites()
+
+
+@app.get("/scrap_all")
+def scrap_all(
+    service: FireCrawlService = Depends(get_fire_crawl_service),
+):
+    """
+    Scrape all websites listed in websites.json.
+    """
+    all_sites = get_websites()
+    target_domains = [url for site in all_sites for url in site.paths]
+    result = service.batch_scrape(target_domains)
+    return result
+
+
+@app.get("/scrap_status/{job_id}")
+def scrap_status(
+    job_id: str,
+    service: FireCrawlService = Depends(get_fire_crawl_service),
+):
+    """
+    Get the status and results of a Firecrawl batch scrape job.
+    """
+    result = service.get_scrap_id(job_id)
+    return result
 
 
 @app.post("/search")
@@ -59,6 +85,7 @@ def search_endpoint(
         search_result = service.generate_content(
             query=search_prompt,
         )
+        print(search_result)
         try:
             start_index = search_result.find("{")
             end_index = search_result.rfind("}")
@@ -89,60 +116,14 @@ def search_endpoint(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.post("/law_updates")
-def get_law_updates(
-    request: LawUpdateRequest,
-    service: GoogleGeminiService = Depends(get_google_gemini_service),
+@app.post("/scrape")
+def scrape_website(
+    request: str, service: FireCrawlService = Depends(get_fire_crawl_service)
 ):
-    try:
-        # If domains are not provided in request, load default list from JSON
-        target_domains = request.domains
-
-        if not target_domains:
-            all_sites = get_websites()
-            target_domains = [site.url for site in all_sites]
-        # elif len(target_domains) > 20:
-        #     partial_sites = target_domains[:19]
-        #     target_domains = partial_sites
-
-        law_updates_prompt = service.get_updated_laws(
-            date=request.date,
-            domains=target_domains,
-        )
-        law_updates_result = service.generate_content(
-            query=law_updates_prompt,
-        )
-        try:
-            start_index = law_updates_result.find("{")
-            end_index = law_updates_result.rfind("}")
-
-            if start_index == -1 or end_index == -1 or start_index > end_index:
-                # If we can't find the start/end of JSON, raise error with the full text
-                raise json.JSONDecodeError(
-                    "JSON start/end markers not found in response.",
-                    law_updates_result,
-                    0,
-                )
-            json_string = law_updates_result[start_index : end_index + 1]
-            # The prompt instructs the model to return a specific JSON object
-            law_updates_json = json.loads(json_string)
-            # Ensure the required keys exist before returning
-            return law_updates_json
-
-        except json.JSONDecodeError as json_e:
-            # Handle cases where the model returns non-JSON or malformed JSON
-            print(
-                f"JSON Decode Error in /law_updates: {json_e}. Raw text: {law_updates_result}"
-            )
-            raise HTTPException(
-                status_code=500,
-                detail=f"Failed to parse model law updates result as JSON. Raw response: {law_updates_result}",
-            )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    result = service.scrape_website(request)
+    return result
+    """Scrape a given website URL."""
 
 
 if __name__ == "__main__":
-    import uvicorn
-
     uvicorn.run(app, host="0.0.0.0", port=8000)

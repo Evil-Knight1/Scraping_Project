@@ -1,20 +1,20 @@
-from google.genai.types import Tool, GoogleSearch, UrlContext
+import os
+from typing import List, Optional
+from google import genai
+from google.genai import types
 import os
 import base64
 from dotenv import load_dotenv
-from typing import Dict, Any, List, Optional
-from google import genai
-from google.genai import types
 
-# Load environment variables
+
 load_dotenv()
 
 
 class GoogleGeminiService:
     def __init__(self):
-        self.api_key = os.environ.get("GEMINI_API_KEY")
+        self.api_key = os.environ.get("GOOGLE_GEMINI_API_KEY")
         if not self.api_key:
-            raise ValueError("GEMINI_API_KEY environment variable not set")
+            raise ValueError("GOOGLE_GEMINI_API_KEY environment variable not set")
 
         self.client = genai.Client(api_key=self.api_key)
         self.model_id = "gemini-2.5-flash"
@@ -25,7 +25,7 @@ class GoogleGeminiService:
 
         # 1. Construct a domain-specific context string
 
-    def domain_context(self, domains: Optional[List[str]] = None):
+    def domain_context(self, domains: List[str]):
         domain_list = ", ".join(domains)
         return domain_list
 
@@ -60,6 +60,8 @@ class GoogleGeminiService:
 
     def search(self, query: str, domains: List[str], mode: Optional[bool] = False):
         domain_context = self.domain_context(domains)
+        search_instruction = "Only" if mode == "strict" else "Prioritize"
+
         prompt_text = f"""
 You are a specialized Legal Searching Agent for Saudi Arabia.
 
@@ -70,8 +72,8 @@ You MUST operate with STRICT legal accuracy and return results ONLY in the requi
 ### MANDATORY RULES
 ==========================
 
-1. {"Prioritize" if mode else "Only"} searching within the domains listed in the "Target Domains" section.
-2. You MUST use url_context to fetch and read actual content from these domains.
+1. {search_instruction} searching within the domains listed in the "Target Domains" section.
+2. You MUST use url_context or (Grounding API) to fetch and read actual content from these domains.
 3. You MUST return ALL answers in the following JSON schema ONLY:
 
 {{
@@ -84,13 +86,18 @@ You MUST operate with STRICT legal accuracy and return results ONLY in the requi
    - No rephrasing.
    - No interpretation beyond what is textually written.
 
+5. ERROR HANDLING & REFUSALS:
+    - If you encounter technical issues (e.g., "vertexaisearch" redirects, tool failures, or access denied), you MUST STILL return a JSON object.
+    - Place the error description or refusal reason inside the "response" field.
+    - DO NOT output plain text explanations, apologies, or conversational filler outside the JSON.
+
 
 ==========================
 ### TASK
 ==========================
 
 1. Search the allowed domains for any page relevant to the query.
-2. Fetch the URLs using url_context.
+2. Fetch the URLs using url_context/grounding API.
 3. Extract the legal text EXACTLY as written (articles, clauses, regulations, decisions, circulars...).
 4. Provide the answer ONLY if the legal information exists in the fetched text.
 5. Return the results STRICTLY using the JSON schema above.
@@ -100,44 +107,8 @@ You MUST operate with STRICT legal accuracy and return results ONLY in the requi
 {query}
 
 ==========================
-### Target Domains (to search using url_context)
+### Target Domains (to search using url_context):
 {domain_context}
 """
 
-        return prompt_text
-
-    def get_updated_laws(self, date: str, domains: List[str]):
-        domain_context = self.domain_context(domains)
-        prompt_text = f"""
-        أنت باحث متخصص في القوانين واللوائح والتشريعات السعودية.
-
-❗ مهمتك:
-ابحث داخل المواقع الموجودة حصرياً في قائمة "sources" المرفقة لك عبر النظام (Grounding API)، ولا تعتمد على أي معرفة خارج هذه المواقع.
-
-❗ المطلوب:
-استخرج كل المتعلقات  القانونية، اللوائح، التشريعات، القرارات، التعميمات، التعديلات الدستورية، والتحديثات القانونية ذات الصلة.
-
-ابدأ البحث من تاريخ: "{date}"  الي تاريخ اليوم.
-أو ما يوازي هذا التاريخ بالتقويم الهجري.
-
-❗ طريقة عرض النتائج:
-أعد النتائج في شكل JSON مطابق تماماً للمخطط التالي:
-
-{{
-   "updated_laws": [
-                {{ "title": "string", "source": "rediractable url" }}
-            ]
-}}
-
-Target Domains (to search using url_context):
-{domain_context}
-
-❗ تعليمات مهمة:
--. Only searching within the domains listed in the "Target Domains" section.
--. You MUST use url_context to fetch and read actual content from these domains.
-- لا تضف نصوصاً إضافية خارج الـ JSON.
-- يجب أن يكون كل عنوان مأخوذ مباشرة من صفحة القرار أو الإعلان القانوني.
-- return the real detected and ready for redirection url (Grounding API).
-- إذا وجدت تحديثات متعددة، أدرجها كلها.
-    """
         return prompt_text

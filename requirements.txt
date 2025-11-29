@@ -1,7 +1,6 @@
-google-genai
-uvicorn
-pydantic
-python-dotenv
 fastapi
 uvicorn[standard]
-requests
+pydantic
+firecrawl
+python-dotenv
+google-genai
