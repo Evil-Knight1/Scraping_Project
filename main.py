@@ -1,13 +1,14 @@
 from http.client import HTTPException
 import json
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, BackgroundTasks
+import time
 import uvicorn
-from pydantic import BaseModel
 from typing import List
 import os
 from firecrawl_service import FireCrawlService
 from google_gemini_service import GoogleGeminiService
 from models import SearchRequest, SearchRequest, Website
+from json_repair import repair_json
 
 app = FastAPI()
 
@@ -38,6 +39,7 @@ def list_websites(request: List[Website]):
 
 @app.get("/scrap_all")
 def scrap_all(
+    background_tasks: BackgroundTasks,
     service: FireCrawlService = Depends(get_fire_crawl_service),
 ):
     """
@@ -45,8 +47,21 @@ def scrap_all(
     """
     all_sites = get_websites()
     target_domains = [url for site in all_sites for url in site.paths]
-    result = service.batch_scrape(target_domains)
-    return result
+    try:
+        job = service.batch_scrape(target_domains)
+        job_id = job.get("jobId") if isinstance(job, dict) else job.id
+        background_tasks.add_task(service.watch_scrape_status, job_id)
+
+        return {
+            "job_id": job_id,
+            "message": "Scraping started. You will be notified automatically when finished.",
+        }
+    except ConnectionError:
+        return {
+            "error": "Network Error: Could not connect to Firecrawl. Please check your internet or VPN."
+        }
+    except Exception as e:
+        return {"error": f"An unexpected error occurred: {str(e)}"}
 
 
 @app.get("/scrap_status/{job_id}")
@@ -87,27 +102,19 @@ def search_endpoint(
         )
         print(search_result)
         try:
-            start_index = search_result.find("{")
-            end_index = search_result.rfind("}")
+            search_json = repair_json(search_result, return_objects=True)
 
-            if start_index == -1 or end_index == -1 or start_index > end_index:
-                # If we can't find the start/end of JSON, raise error with the full text
-                raise json.JSONDecodeError(
-                    "JSON start/end markers not found in response.",
-                    search_result,
-                    0,
-                )
-            json_string = search_result[start_index : end_index + 1]
+            # Validation: Ensure we actually got a list or dict, not an empty string
+            if not search_json:
+                raise ValueError("Parsed JSON is empty")
 
-            # The prompt instructs the model to return a specific JSON object
-            search_json = json.loads(json_string)
-
-            # Ensure the required keys exist before returning
             return search_json
 
-        except json.JSONDecodeError as json_e:
+        except Exception as parse_error:
             # Handle cases where the model returns non-JSON or malformed JSON
-            print(f"JSON Decode Error in /search: {json_e}. Raw text: {search_result}")
+            print(
+                f"JSON Decode Error in /search: {parse_error}. Raw text: {search_result}"
+            )
             raise HTTPException(
                 status_code=500,
                 detail=f"Failed to parse model search result as JSON. Raw response: {search_result}",

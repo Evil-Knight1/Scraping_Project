@@ -4,3 +4,4 @@ pydantic
 firecrawl
 python-dotenv
 google-genai
+json_repair
