@@ -79,48 +79,61 @@ def scrap_status(
 @app.post("/search")
 def search_endpoint(
     request: SearchRequest,
-    service: GoogleGeminiService = Depends(get_google_gemini_service),
+    service: FireCrawlService = Depends(get_fire_crawl_service),
 ):
-    """
-    Search for a query using Gemini Grounding.
-    1. Answers the question.
-    2. Checks for legal updates.
-    """
     try:
-        # If domains are not provided in request, load default list from JSON
-        target_domains = request.domains
-        if not target_domains:
-            all_sites = get_websites()
-            target_domains = [site.url for site in all_sites]
+        results = service.search_results(request.query)
+        return results
 
-        search_prompt = service.search(
-            query=request.query,
-            domains=target_domains,
-        )
-        search_result = service.generate_content(
-            query=search_prompt,
-        )
-        print(search_result)
-        try:
-            search_json = repair_json(search_result, return_objects=True)
-
-            # Validation: Ensure we actually got a list or dict, not an empty string
-            if not search_json:
-                raise ValueError("Parsed JSON is empty")
-
-            return search_json
-
-        except Exception as parse_error:
-            # Handle cases where the model returns non-JSON or malformed JSON
-            print(
-                f"JSON Decode Error in /search: {parse_error}. Raw text: {search_result}"
-            )
-            raise HTTPException(
-                status_code=500,
-                detail=f"Failed to parse model search result as JSON. Raw response: {search_result}",
-            )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# @app.post("/search")
+# def search_endpoint(
+#     request: SearchRequest,
+#     service: GoogleGeminiService = Depends(get_google_gemini_service),
+# ):
+#     """
+#     Search for a query using Gemini Grounding.
+#     1. Answers the question.
+#     2. Checks for legal updates.
+#     """
+#     try:
+#         # If domains are not provided in request, load default list from JSON
+#         target_domains = request.domains
+#         if not target_domains:
+#             all_sites = get_websites()
+#             target_domains = [site.url for site in all_sites]
+
+#         search_prompt = service.search(
+#             query=request.query,
+#             domains=target_domains,
+#         )
+#         search_result = service.generate_content(
+#             query=search_prompt,
+#         )
+#         print(search_result)
+#         try:
+#             search_json = repair_json(search_result, return_objects=True)
+
+#             # Validation: Ensure we actually got a list or dict, not an empty string
+#             if not search_json:
+#                 raise ValueError("Parsed JSON is empty")
+
+#             return search_json
+
+#         except Exception as parse_error:
+#             # Handle cases where the model returns non-JSON or malformed JSON
+#             print(
+#                 f"JSON Decode Error in /search: {parse_error}. Raw text: {search_result}"
+#             )
+#             raise HTTPException(
+#                 status_code=500,
+#                 detail=f"Failed to parse model search result as JSON. Raw response: {search_result}",
+#             )
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/scrape")

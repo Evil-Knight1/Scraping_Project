@@ -3,7 +3,6 @@ from typing import Optional, List, Dict
 from firecrawl import Firecrawl
 from dotenv import load_dotenv
 import os
-import re
 
 load_dotenv()
 
@@ -140,3 +139,61 @@ class FireCrawlService:
         # send_telegram(...)
         # write_to_db(...)
         # websocket_push(...)
+
+    def search_results(
+        self,
+        query: str,
+        limit: int = 3,
+    ):
+        """
+        Search Firecrawl scraped data.
+        """
+        response = self.client.search(
+            query,
+            limit=limit,
+            location="saudi arabia",
+            sources=["web", "news"],
+            scrape_options={
+                "formats": [
+                    {
+                        "type": "json",
+                        "prompt": (
+                            "Extract legal judgments with the following fields: "
+                            "title, court, judgment_type, year, appeal_number, summary, and source_url. "
+                            "Match the structure of judicial ruling cards. "
+                            "if the field is not available, use null. "
+                            "All extracted data must be official legal content only."
+                        ),
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {"type": "string"},  # حكم محكمة النقض…
+                                    "court": {"type": "string"},  # محكمة النقض
+                                    "judgment_type": {
+                                        "type": "string"
+                                    },  # حكم نقض / حكم محكمة…
+                                    "year": {"type": "string"},  # 2023
+                                    "appeal_number": {
+                                        "type": "string"
+                                    },  # الطعن رقم 1234 لسنة 2023
+                                    "summary": {"type": "string"},  # قضت المحكمة بأن…
+                                    "source_url": {
+                                        "type": "string"
+                                    },  # رابط اقرأ المزيد
+                                },
+                                "required": [
+                                    "title",
+                                    "court",
+                                    "judgment_type",
+                                    "year",
+                                    "source_url",
+                                ],
+                            },
+                        },
+                    }
+                ]
+            },
+        )
+        return response

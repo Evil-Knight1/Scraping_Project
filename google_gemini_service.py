@@ -58,56 +58,34 @@ class GoogleGeminiService:
             print(f"Error generating content: {e}")
             return f"Error: {str(e)}"
 
-    def search(self, query: str, domains: List[str], mode: Optional[bool] = False):
+    def search(self, query: str, domains: List[str], mode: Optional[str] = None):
+
         domain_context = self.domain_context(domains)
         search_instruction = "Only" if mode == "strict" else "Prioritize"
+
         schema_instruction = {
-            "Title": "string (The official title of the legal text/article)",
-            "Summary": "string (A brief summary of the legal text/article)",
-            "Source_name": "string (e.g., الجريدة الرسمية أو الموقع الرسمي)",
-            "Date": "string (Date of issuance)",
-            "Hijeri_Date": "string (Hijri date of issuance)",
-            "Source_url": "string (The full URL link from the search result)(Grounding API)",
+            "answers": [
+                {
+                    "Title": "string (Official title of the legal text/article)",
+                    "Summary": "string (Brief official summary extracted EXACTLY from the source)",
+                    "Source_name": "string (e.g., الجريدة الرسمية, الموقع الرسمي)",
+                    "Date": "string (Gregorian date of issuance)",
+                    "Hijeri_Date": "string (Hijri date of issuance)",
+                    "Source_url": "string (URL of the source page)",
+                }
+            ]
         }
 
-        prompt_text = f"""You are a specialized Legal Searching Agent for Saudi Arabia.
+        prompt_text = f"""دور في المواقع التالية على اكثر صفحة مناسبة للإستعلام ده فيها نص مباشر وصريح ورجع جزء من الاجابة ورجع رابط الصفحة المباشر للإنتقال عشان اشوف باقي الاجابة
 
-Your task is to analyze content from the **Target Domains** listed below based on the **Query**, and return the relevant legal information.
-
-==========================
-### MANDATORY RULES
-==========================
-
-1. **Source of Truth:** {search_instruction} retrieving content from the domains listed in the "Target Domains" section.
-2. **Schema:** You MUST return ALL results in a JSON array that STRICTLY adheres to the following schema. Use 'null' for fields where data is unavailable.
-
-[
-    {schema_instruction}
-    ...
-]
-
-3. **Content Extraction:** You MUST provide legal terms **EXACTLY** as they appear in the source text. No rephrasing or simplification.
-
-4. **Response Field (Error Handling):** If you successfully find legal text, **DO NOT** include a "response" field. If you fail to find legal text or encounter a technical issue (like the redirect error), you MUST return the following **SINGLE** JSON object with all fields set to null, and the "response" field populated:
-
-{{
-    "Title": null,
-    "Summary": null,
-    "Source_name": null,
-    "Date": null,
-    "Hijeri_Date": null,
-    "Source_url": null,
-    "response": "string describing the refusal or error reason."
-}}
-
-==========================
-### Query
 {query}
 
-==========================
-### Target Domains (for content retrieval):
-{domain_context}
-"""
+Target Domains
+https://uqn.gov.sa, https://laws.boe.gov.sa, https://www.moj.gov.sa, https://cma.org.sa, https://zatca.gov.sa, https://judgments.moj.gov.sa/, https://www.bog.gov.sa/
+return the data in this json schema
+{schema_instruction}
+the answer has each source answer with the source url
+        """
 
         return prompt_text
 
