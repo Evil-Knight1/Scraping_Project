@@ -9,9 +9,15 @@ from firecrawl_service import FireCrawlService
 from google_gemini_service import GoogleGeminiService
 from models import SearchRequest, SearchRequest, Website
 from json_repair import repair_json
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def get_google_gemini_service():
     return GoogleGeminiService()
